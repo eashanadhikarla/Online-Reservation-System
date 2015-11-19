@@ -1,0 +1,183 @@
+//Indian Railway - Ticket Reservation
+
+#include<fstream>
+//#include<conio.h>
+//#include<stdio>
+#include<math.h>
+#include<string.h>
+//#include<process>
+
+using namespace process;
+using namespace std;
+using namespace conio;
+
+char from[50],to[50];
+
+void details()
+{
+    cout << "\n From";
+    gets(to);
+    cout << "\n to";
+    gets(from);
+}
+
+class Railway
+{
+    char station[30];
+    unsigned int distance;
+    float fare;
+    
+Public:
+    void add_data()
+    {
+        cout << "Enter the Railway Station Name : "<<endl;
+        gets(station);
+        cout <<"Enter its Distance from JABALPUR : "<<endl;
+        cin>>distance;
+    }
+    
+    void amount(int a , int b , int c)
+    {
+        cout << "Total Distance is : " << fabs((a-b))<<endl;
+        cout << "Charges taken per/km : " << c;
+        fare = fabs((a-b)) * c;
+        cout << "So,the Total Fare is :" << fare;
+    }
+    
+    unsigned int dist()
+        return distance;
+    
+    char* station_v()
+        return station;
+    
+    void modify()
+    {
+        cout << "Enter the New Railway Station : " <<endl;
+        gets(station);
+        cout << "Enter its Distance from JABALPUR : " <<endl;
+        cin >> distance;
+    }
+
+} tr;
+
+
+void main()
+{
+    clrscr();
+    unsigned int per_km=5, choice;
+    unsigned int d1=0, d2=0, i;
+    char station_searched[30];
+    
+    while(1)
+    {
+        clrscr();
+        cout << "\n\t\t WELCOME TO INDIAN RAILWAYS \n";
+        
+        for(i=0; i<=100; i++)
+        {
+            cout << "=";
+        }
+    
+        cout << "\n Enter your Choice : ";
+        cout << "\n 1. Add New Railway Station to your Booking ";
+        cout << "\n 2. Book a New Ticket ";
+        cout << "\n 3. Change per/km Rates ";
+        cout << "\n 4. Modify the Details of TRAIN ";
+        cout << "\n 5. EXIT \n ";
+        
+        
+        for(i=0; i<=100; i++)
+        {
+            cout << "=";
+        }
+        
+        switch(choice)
+        {
+            case 1:
+                ofstream of1("train.dat",ios :: binary | ios :: app);
+                tr.add_data();
+                
+                of1.write((char*)&tr,sizeof(tr));
+                of1.close();
+                
+                break;
+                
+            case 2:
+                ifstream of1("train.dat", ios :: binary);
+                detail();
+                
+                while(of1)
+                {
+                    of1.read((char*)&tr,sizeof(tr));
+                    
+                    if (0 == stricmp(from,tr.station_v()))
+                    {
+                        d1 = tr.dist();
+                    }
+                    
+                    if (0 == stricmp(to,tr.station_v()))
+                    {
+                        d2 = tr.dist();
+                    }
+                    
+                    if (d1 && d2)
+                    {
+                        tr.amount(d1,d2,per_km);
+                        getch();
+                        break;
+                    }
+                    
+                    if(of1.eof())
+                    {
+                        cout << "/n Staiton not found check your spelling! ";
+                        getch();
+                    }
+                }
+                of1.close();
+                break;
+        }
+        
+        if(choice == 3)
+        {
+            cout << "Enter new per/km rates";
+            cin >> per_km;
+        }
+        
+        if(choice == 4)
+        {
+            cout << "Enter the Railway Station to be Changed";
+            gets(station_searched);
+            ifstream f1("train.dat",ios :: binary);
+            while(f1)
+            {
+                f1.read((char*)&tr,sizeof(tr));
+                long pos = f1.tellg();
+                if(0 == strcmp(station_searched,tr.station_v()))
+                {
+                    f1.seekg((~1*sizeof(tr),ios :: cur));
+                    tr.modify();
+                    f1.close();
+                    ofstream f1("train.dat",ios :: app);
+                    f1.seekp(pos,ios::beg);
+                    f1.write((char*)&tr,sizeof(tr));
+                    cout << "Record Modified";
+                    f1.close();
+                    break;
+                }
+                else if(f1.eof())
+                {
+                    cout << "\n Station not found \n";
+                    getch();
+                }
+            }
+        }
+        
+        if(choice == 5)
+        {
+            cout << "THANK YOU FOR USING INDIAN RAILWAYS";
+            getch();
+            exit(0);
+        }
+    }
+    getch();
+}
