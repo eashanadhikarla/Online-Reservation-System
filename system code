@@ -1,15 +1,11 @@
 //Indian Railway - Ticket Reservation
 
 #include<fstream>
-//#include<conio.h>
-//#include<stdio>
+#include<conio.h>
+#include<stdio>
 #include<math.h>
 #include<string.h>
-//#include<process>
-
-using namespace process;
-using namespace std;
-using namespace conio;
+#include<process>
 
 char from[50],to[50];
 
